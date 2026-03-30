@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "looker-cooker"
+version = "1.0.0"
+description = "Cook up a complete export of your Looker instance — metadata, LookML, screenshots, and compiled SQL"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Nick Thompson" }]
+keywords = ["looker", "backup", "export", "migration", "dashboards", "lookml"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "looker-sdk>=24.0.0",
+    "requests>=2.28",
+    "python-dotenv>=1.0",
+    "playwright>=1.40",
+]
+
+[project.scripts]
+looker-cooker = "looker_backup.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["looker_backup*"]
