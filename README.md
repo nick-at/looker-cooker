@@ -55,18 +55,16 @@ LOOKERSDK_CLIENT_SECRET=your_client_secret
 Generate API keys in Looker under **Admin > Users > Edit > API Keys**. Or export them as environment variables.
 
 ### 3. Run
-
-```bash
-looker-cooker
-```
-
-Output lands in `./looker_backup_output/` by default. Metadata, screenshots, and compiled SQL are all included.
-
 Test on a handful of dashboards first:
 
 ```bash
 looker-cooker --limit 5 --verbose
 ```
+Then let it cook:
+```bash
+looker-cooker
+```
+
 
 ## CLI options
 
