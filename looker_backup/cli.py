@@ -175,6 +175,7 @@ def main():
             log.info('Screenshot [%d/%d] Dashboard %s: %s', i, len(screenshot_queue), dash_id, title)
             rate_limiter.wait()
             api_render_ok = False
+            api_timed_out = False
             try:
                 task = sdk.create_dashboard_render_task(
                     dashboard_id=dash_id,
@@ -209,6 +210,7 @@ def main():
                 else:
                     elapsed = int(time.time() - start)
                     log.warning('    TIMED OUT after %ds (last status: %s)', elapsed, last_status)
+                    api_timed_out = True
             except Exception as e:
                 log.error('    ERROR: %s', sanitize_error(str(e)))
 
@@ -225,12 +227,15 @@ def main():
                         manifest.set_status('dashboards', dash_id, 'success')
                     else:
                         log.warning('    [fallback] Playwright not available')
-                        manifest.set_status('dashboards', dash_id, 'screenshot_failed', error='API render failed, Playwright unavailable')
+                        fail_status = 'screenshot_timeout' if api_timed_out else 'screenshot_failed'
+                        manifest.set_status('dashboards', dash_id, fail_status, error='API render failed, Playwright unavailable')
                 except Exception as pw_err:
                     log.error('    [fallback] Playwright failed: %s', sanitize_error(str(pw_err)))
-                    manifest.set_status('dashboards', dash_id, 'screenshot_failed', error=sanitize_error(f'API + Playwright both failed: {pw_err}'))
+                    fail_status = 'screenshot_timeout' if api_timed_out else 'screenshot_failed'
+                    manifest.set_status('dashboards', dash_id, fail_status, error=sanitize_error(f'API + Playwright both failed: {pw_err}'))
             elif not api_render_ok:
-                manifest.set_status('dashboards', dash_id, 'screenshot_failed', error='API render failed, no fallback available')
+                fail_status = 'screenshot_timeout' if api_timed_out else 'screenshot_failed'
+                manifest.set_status('dashboards', dash_id, fail_status, error='API render failed, no fallback available')
 
             manifest.flush()
 
