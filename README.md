@@ -1,6 +1,5 @@
 # looker-cooker
-
-A complete backup tool for Looker instances — not just dashboard YAML, but the compiled SQL, full-page screenshots, and complete API metadata. Everything you need to migrate dashboards to another tool or keep a record of what existed.
+looker-cooker rips a complete backup including screenshots and complied SQL of your Looker dashboards and looks, not just the YAML definitions. Everything you need to rebuild your dashboards somewhere else.
 
 ## Why not just export LookML?
 
@@ -8,9 +7,9 @@ LookML definitions alone aren't much use outside of Looker. They describe querie
 
 looker-cooker gives you the full picture:
 
-- **Compiled SQL** for every tile and look — the actual queries hitting your database, with all joins, derived tables, and filter logic resolved. These can be dropped into Metabase, Preset, Sigma, or any tool that speaks SQL, without needing to reverse-engineer explores and derived tables.
-- **Screenshots** of every dashboard — a visual record of what each dashboard looked like, useful for migration QA and stakeholder sign-off.
-- **Full API metadata** (JSON) — filter configs, layouts, scheduling, permissions. The stuff LookML doesn't capture.
+- **Compiled SQL** for every tile and look; the actual queries hitting your database, with all joins, derived tables, and filter logic resolved. These can be dropped into Metabase, Preset, Sigma, or any tool that speaks SQL, without needing to reverse-engineer explores and derived tables.
+- **Screenshots** of every dashboard; a visual record of what each dashboard looked like, useful for migration QA and stakeholder sign-off.
+- **Full API metadata** (JSON); filter configs, layouts, scheduling, permissions. The stuff LookML doesn't capture.
 - **LookML exports** too, where available.
 
 ## What you get
@@ -32,7 +31,7 @@ looks/
   42_Monthly_Revenue.sql    # Compiled SQL
 ```
 
-Progress is tracked in `manifest.json` — interrupt it, re-run it, it picks up where it left off.
+Progress is tracked in `manifest.json`. Interrupt it, re-run it, it picks up where it left off.
 
 ## Getting started
 
@@ -91,7 +90,7 @@ looker-cooker --limit 5 --verbose
 
 ### Screenshots
 
-Looker's render API fails entirely if a single tile on a dashboard has an error. So looker-cooker falls back to a headless Chromium browser via Playwright — it grabs an authenticated embed URL, loads the dashboard, waits for tiles to render, and takes a full-page screenshot. Broken tiles show up as placeholders instead of killing the whole render. This is why Playwright is a required dependency.
+Looker's render API fails entirely if a single tile on a dashboard has an error. So looker-cooker falls back to a headless Chromium browser via Playwright it grabs an authenticated embed URL, loads the dashboard, waits for tiles to render, and takes a full-page screenshot. Broken tiles show up as placeholders instead of killing the whole render. This is why Playwright is a required dependency.
 
 ### Resumability
 
@@ -116,6 +115,6 @@ Defaults to 100ms between API calls (`--api-delay 0.1`). Increase if you're hitt
 
 ### Security
 
-- Don't commit your `.env` file — it's already in `.gitignore`.
+- Don't commit your `.env` file. It's already in `.gitignore` now it's also here.
 - Use a service account with read-only permissions where possible.
-- The backup output contains your business data — treat it accordingly.
+- The backup output contains your business data so treat it accordingly.
