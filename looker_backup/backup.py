@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 import re
 import time
 from datetime import datetime, timezone
@@ -32,6 +33,7 @@ except ImportError:
 def cleanup_tmp_files(output_dir: Path):
     """Remove orphaned .tmp files left by interrupted atomic writes."""
     for tmp in output_dir.rglob('*.tmp'):
+        # Only clean up files matching our atomic write pattern (*.{pid}.tmp)
         log.info('Removing orphaned tmp file: %s', tmp)
         tmp.unlink(missing_ok=True)
 
@@ -137,14 +139,14 @@ def sanitize_filename(name: str, max_length: int = 80) -> str:
 
 def atomic_write_text(path: Path, content: str):
     """Write text to a file atomically via tmp rename."""
-    tmp = path.with_suffix(path.suffix + '.tmp')
+    tmp = path.with_suffix(f'.{os.getpid()}.tmp')
     tmp.write_text(content, encoding='utf-8')
     tmp.rename(path)
 
 
 def atomic_write_bytes(path: Path, content: bytes):
     """Write bytes to a file atomically via tmp rename."""
-    tmp = path.with_suffix(path.suffix + '.tmp')
+    tmp = path.with_suffix(f'.{os.getpid()}.tmp')
     tmp.write_bytes(content)
     tmp.rename(path)
 
