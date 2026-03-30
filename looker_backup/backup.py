@@ -14,6 +14,13 @@ from looker_sdk.rtl.model import Model as LookerModel
 
 log = logging.getLogger(__name__)
 
+_SECRET_URL_RE = re.compile(r'https?://\S*[?&](t|token|access_token|nonce)=\S*', re.IGNORECASE)
+
+
+def sanitize_error(msg: str) -> str:
+    """Strip URLs that may contain authentication tokens from error messages."""
+    return _SECRET_URL_RE.sub('[redacted URL with auth token]', msg)
+
 PLAYWRIGHT_AVAILABLE = False
 try:
     from playwright.sync_api import sync_playwright
@@ -246,7 +253,7 @@ def backup_dashboard_metadata(sdk, dashboard, output_dir: Path, manifest: Manife
         return True
 
     except Exception as e:
-        error_msg = str(e)
+        error_msg = sanitize_error(str(e))
         log.error('Dashboard %s: %s', dash_id, error_msg)
         manifest.set_status('dashboards', dash_id, 'failed', error=error_msg)
         return False
@@ -275,7 +282,7 @@ def backup_look(sdk, look, output_dir: Path, manifest: Manifest, force: bool):
         manifest.set_status('looks', look_id, 'success')
 
     except Exception as e:
-        error_msg = str(e)
+        error_msg = sanitize_error(str(e))
         log.error('Look %s: %s', look_id, error_msg)
         manifest.set_status('looks', look_id, 'failed', error=error_msg)
 

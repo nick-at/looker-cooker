@@ -38,6 +38,7 @@ from .backup import (
     backup_look,
     cleanup_tmp_files,
     get_dashboard_dir,
+    sanitize_error,
     sanitize_filename,
     screenshot_with_playwright,
 )
@@ -209,7 +210,7 @@ def main():
                     elapsed = int(time.time() - start)
                     log.warning('    TIMED OUT after %ds (last status: %s)', elapsed, last_status)
             except Exception as e:
-                log.error('    ERROR: %s', e)
+                log.error('    ERROR: %s', sanitize_error(str(e)))
 
             # Playwright fallback for failed/timed-out renders
             if not api_render_ok and use_playwright:
@@ -226,8 +227,8 @@ def main():
                         log.warning('    [fallback] Playwright not available')
                         manifest.set_status('dashboards', dash_id, 'screenshot_failed', error='API render failed, Playwright unavailable')
                 except Exception as pw_err:
-                    log.error('    [fallback] Playwright failed: %s', pw_err)
-                    manifest.set_status('dashboards', dash_id, 'screenshot_failed', error=f'API + Playwright both failed: {pw_err}')
+                    log.error('    [fallback] Playwright failed: %s', sanitize_error(str(pw_err)))
+                    manifest.set_status('dashboards', dash_id, 'screenshot_failed', error=sanitize_error(f'API + Playwright both failed: {pw_err}'))
             elif not api_render_ok:
                 manifest.set_status('dashboards', dash_id, 'screenshot_failed', error='API render failed, no fallback available')
 
