@@ -105,7 +105,9 @@ def screenshot_with_playwright(
             page.set_viewport_size({'width': width, 'height': max(content_height, height)})
             page.wait_for_timeout(1_000)
 
-            page.screenshot(path=str(output_path), full_page=True)
+            tmp_path = output_path.with_suffix('.png.tmp')
+            page.screenshot(path=str(tmp_path), full_page=True)
+            tmp_path.rename(output_path)
             return True
         finally:
             browser.close()
