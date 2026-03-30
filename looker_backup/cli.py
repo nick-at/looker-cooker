@@ -93,7 +93,8 @@ def main():
     parser.add_argument('--limit', type=int, default=0, help='Max number of dashboards/looks to process (0 = all)')
     parser.add_argument('--retry-timeouts', action='store_true', help='Only retry dashboards that timed out (with longer timeout)')
     parser.add_argument('--screenshot-timeout', type=int, default=300, help='Seconds to wait per screenshot (default: 300)')
-    parser.add_argument('--backfill-sql', action='store_true', help='Add raw SQL to existing dashboard/look backups where missing')
+    parser.add_argument('--no-sql', action='store_true', help='Skip SQL extraction (faster, metadata and screenshots only)')
+    parser.add_argument('--backfill-sql', action='store_true', help='Only backfill SQL for existing backups (skip metadata/screenshots)')
     parser.add_argument('--no-playwright', action='store_true', help='Disable Playwright headless-browser fallback for failed screenshots')
     parser.add_argument('--dashboard-id', type=str, help='Only process a single dashboard by ID')
     parser.add_argument('--api-delay', type=float, default=0.1, help='Minimum seconds between API calls (default: 0.1)')
@@ -250,8 +251,8 @@ def main():
                 manifest.flush()
         manifest.flush()
 
-        # Backfill SQL for existing backups
-        if args.backfill_sql:
+        # Extract SQL — runs by default, skip with --no-sql
+        if not args.no_sql or args.backfill_sql:
             log.info('Backfilling raw SQL...')
 
             dashboards_dir = output_dir / 'dashboards'
