@@ -116,3 +116,22 @@ Defaults to 100ms between API calls (`--api-delay 0.1`). Increase if you're hitt
 - Don't commit your `.env` file. It's already in `.gitignore` now it's also here.
 - Use a service account with read-only permissions where possible.
 - The backup output contains your business data so treat it accordingly.
+
+## Usage with Claude Code
+
+If you use [Claude Code](https://claude.ai/claude-code), you can install looker-cooker as a plugin:
+
+```
+/plugin marketplace add nick-at/looker-cooker
+/plugin install looker-cooker
+```
+
+Then run it with:
+
+```
+/looker-cooker:run-backup
+```
+
+Or just tell Claude:
+
+> Clone https://github.com/nick-at/looker-cooker and help me set it up to back up my Looker instance

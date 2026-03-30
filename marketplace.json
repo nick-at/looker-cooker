@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    {
+      "name": "looker-cooker",
+      "description": "Back up your Looker instance — compiled SQL, screenshots, metadata, and LookML",
+      "path": "."
+    }
+  ]
+}

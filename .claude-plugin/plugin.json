@@ -1,0 +1,5 @@
+{
+  "name": "looker-cooker",
+  "description": "Back up your Looker instance — compiled SQL, screenshots, metadata, and LookML",
+  "version": "1.0.0"
+}

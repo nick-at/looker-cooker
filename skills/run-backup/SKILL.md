@@ -17,9 +17,9 @@ Before running, verify the environment is ready:
 pip show looker-cooker 2>/dev/null || echo "NOT INSTALLED"
 ```
 
-2. If not installed, install it in development mode:
+2. If not installed, clone and install it:
 ```bash
-cd /Users/nickt/Documents/GitHub/looker-cooker && pip install -e . && playwright install chromium
+git clone https://github.com/nick-at/looker-cooker.git /tmp/looker-cooker && cd /tmp/looker-cooker && pip install . && playwright install chromium
 ```
 
 3. Check credentials are available (do NOT print the values):
@@ -40,11 +40,12 @@ Use the CLI flags based on what the user wants:
 
 | Goal | Command |
 |------|---------|
-| Full backup | `looker-cooker` |
+| Full backup (with SQL) | `looker-cooker` |
 | Test with a few items | `looker-cooker --limit 5` |
 | Single dashboard | `looker-cooker --dashboard-id <ID>` |
 | Force re-download | `looker-cooker --force` |
-| Add SQL to existing backup | `looker-cooker --backfill-sql` |
+| Skip SQL extraction | `looker-cooker --no-sql` |
+| Only backfill SQL | `looker-cooker --backfill-sql` |
 | Retry failed screenshots | `looker-cooker --retry-timeouts` |
 | Custom output dir | `looker-cooker --output-dir /path/to/dir` |
 
